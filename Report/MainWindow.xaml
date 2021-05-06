@@ -1,0 +1,53 @@
+﻿<Window x:Class="NestixReport.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Nestix Report" Height="775" Width="210" ResizeMode="NoResize">
+    <StackPanel>
+        <!--<Label Content="База" Margin="10 10 10 0"/>-->
+        <ComboBox Name="DbComboBox" Margin="10 10 10 0" SelectedIndex="0">
+            <ComboBoxItem Content="NxSC_Zvezda_10510"/>
+            <ComboBoxItem Content="NxSC_Zvezda_120K"/>
+            <ComboBoxItem Content="NxSC_Zvezda_22430"/>
+            <ComboBoxItem Content="NxSC_Zvezda_22480"/>
+            <ComboBoxItem Content="NxSC_Zvezda_69K"/>
+            <ComboBoxItem Content="NxSC_Zvezda_AFRA"/>
+            <ComboBoxItem Content="NxSC_Zvezda_IBSV"/>
+            <ComboBoxItem Content="NxSC_Zvezda_MR"/>
+            <ComboBoxItem Content="NxSC_Zvezda_OSNASTKA"/>
+        </ComboBox>
+        <!--<Label Content="Запустить Nestix" Margin="10 10 10 0"/>-->
+        <Button Content="Запустить" Padding="5" Margin="10 10 10 0" Click="RunNestixButtonClick"/>
+        <Label Content="Фильтр" Margin="10 10 10 0" />
+        <TextBox x:Name="FilterTextBox" Margin="10 10 10 0" Text="056001-S11" />
+        <Label Content="Отчёты" Margin="10 10 10 0"/>
+        <Button Content="Открыть отчёт (встроенный)" Padding="5" Margin="10 10 10 0" Click="OpenOldReportClick"/>
+        <Button Content="Открыть отчёт (Егор)" Padding="5" Margin="10 10 10 0" Click="OpenNewReportClick"/>
+        <Button Content="Расчёт газов" Padding="5" Margin="10 10 10 0" Click="CalcGasesClick"/>
+        <Button Content="Список деталей" Padding="5" Margin="10 10 10 0" Click="PartsToNcRelationClick"/>
+        <Button Content="Пакет на выдачу" Padding="5" Margin="10 10 10 0" Click="BatchNestInfo"/>
+        <Button Padding="5" Margin="10 10 10 0" Click="MaterialReport">
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center">Ведомость расхода материала</TextBlock>
+        </Button>
+        <Button Padding="5" Margin="10 10 10 0" Click="PickingListClick">
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center">Комплектовочная ведомость</TextBlock>
+        </Button>
+        <Button Padding="5" Margin="10 10 10 0" Click="PickingList10510Click">
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center">10510: Комплектовочная ведомость</TextBlock>
+        </Button>
+        <Button Padding="5" Margin="10 10 10 0" Click="CheckWcogClick">
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center">10510: Сравнить WCOG и спецификацию</TextBlock>
+        </Button>
+        <Button Padding="5" Margin="10 10 10 0" Click="PlatePivotClick">
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center">10510: Сводная по целым листам</TextBlock>
+        </Button>
+        <Button Padding="5" Margin="10 10 10 0" Click="QuantityCheckWcogAndNestix">
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center">10510: Сравнить кол-во деталей (WCOG и Nestix)</TextBlock>
+        </Button>
+        <Button Padding="5" Margin="10 10 10 0" Click="PartlistFromSpec">
+            <TextBlock TextWrapping="Wrap" TextAlignment="Center">10510: партлист из спец.</TextBlock>
+        </Button>
+    </StackPanel>
+</Window>

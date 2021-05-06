@@ -1,0 +1,15 @@
+{
+  "profiles": {
+    "Remote Work Machine": {
+      "commandName": "Executable",
+      "executablePath": "D:\\NestixReport\\NestixReport.exe",
+      "workingDirectory": "D:\\NestixReport",
+      "remoteDebugEnabled": true,
+      "remoteDebugMachine": "C33010704",
+      "authenticationMode": "Windows"
+    },
+    "Local Machine": {
+      "commandName": "Project"
+    }
+  }
+}
