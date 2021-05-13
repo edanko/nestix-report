@@ -25,7 +25,6 @@
         <Label Content="Отчёты" Margin="10 10 10 0"/>
         <Button Content="Открыть отчёт (встроенный)" Padding="5" Margin="10 10 10 0" Click="OpenOldReportClick"/>
         <Button Content="Открыть отчёт (Егор)" Padding="5" Margin="10 10 10 0" Click="OpenNewReportClick"/>
-        <Button Content="Список деталей" Padding="5" Margin="10 10 10 0" Click="PartsToNcRelationClick"/>
         <Button Content="Пакет на выдачу" Padding="5" Margin="10 10 10 0" Click="BatchNestInfo"/>
         <Button Padding="5" Margin="10 10 10 0" Click="MaterialReport">
             <TextBlock TextWrapping="Wrap" TextAlignment="Center">Ведомость расхода материала</TextBlock>
