@@ -39,28 +39,6 @@ on nxsheetpathdet.nxorderlineid = nxorderline.nxorderlineid
 WHERE nxpathid = @pathid
 order by PosMrpLineNo";
 
-        public const string ForGas = @"select 
-nxpath.nxname,
-machine.name,
-(SELECT SUM(ISNULL(spd.nxarea * pr.nxprthick * pr.nxprdensity, col.nxolweight) * spd.nxdetailcount)
-    FROM nxsheetpathdet AS spd
-    INNER JOIN nxorderline AS col ON spd.nxorderlineid = col.nxorderlineid
-    LEFT OUTER JOIN nxproduct AS pr ON pr.nxproductid = nxproduct.nxproductid
-    WHERE spd.nxsheetpathid = nxsheetpath.nxsheetpathid
-) AS PartsWeight,
-nxpath.nxmachineid,
-nxproduct.nxprquality
-
-FROM nxpath WITH(nolock)
-
-INNER JOIN machine WITH(nolock) ON nxpath.nxmachineid = machine.machineid
-INNER JOIN nxsheetpath WITH(nolock) ON nxsheetpath.nxpathid = nxpath.nxpathid
-INNER JOIN nxorderline WITH(nolock) ON nxsheetpath.nxmatorderlineid = nxorderline.nxorderlineid
-INNER JOIN nxproduct WITH(nolock) ON nxorderline.nxproductid = nxproduct.nxproductid
-
-WHERE  nxpath.nxname LIKE @name
-ORDER BY nxproduct.nxprthick asc, nxpath.nxname asc";
-
 
         public const string BatchNestingInfo = @"select 
 nxpath.nxname,
