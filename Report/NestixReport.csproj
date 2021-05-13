@@ -23,16 +23,6 @@
       <Private>true</Private>
       <EmbedInteropTypes>true</EmbedInteropTypes>
     </COMReference>
-	  <COMReference Include="Microsoft.Office.Word.dll">
-	    <WrapperTool>tlbimp</WrapperTool>
-	    <VersionMinor>7</VersionMinor>
-	    <VersionMajor>8</VersionMajor>
-	    <Guid>00020905-0000-0000-c000-000000000046</Guid>
-	    <Lcid>0</Lcid>
-	    <Isolated>false</Isolated>
-	    <Private>true</Private>
-	    <EmbedInteropTypes>true</EmbedInteropTypes>
-	  </COMReference>
   </ItemGroup>
 	<ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.12.3" />
