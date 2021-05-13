@@ -190,81 +190,96 @@ namespace NestixReport
 
                 var nclist = new List<NestixPartlist>();
 
-                if (nxparts != null)
+                int posno = 0;
+                string block = "";
+                int quantity = 0;
+                double thickness = 0.0;
+                string quality = "";
+                string dimension = "";
+                double weight = 0.0, totalWeight = 0.0;
+                double length = 0.0, width = 0.0;
+                
+                if (wcog.ContainsKey(p))
                 {
-                    nclist = nxparts.FindAll(x => x.PosNo == wcog[p].PosNo.ToString() && x.Section == wcog[p].Block);
-                }
-
-
-                s.Range["A" + row].Value2 = row - 1;
-                s.Range["B" + row].Value2 = "";
-                s.Range["C" + row].Value2 = "056001";
-                s.Range["D" + row].Value2 = wcog[p].Block;
-                s.Range["E" + row].Value2 = wcog[p].PosNo;
-
-                s.Range["F" + row].Value2 = nclist.Count > 0 ? nclist[0].Count : wcog[p].Quantity;
-
-
-                // if (!string.IsNullOrWhiteSpace(p[3]))
-                // {
-                //     s.Range["G" + row].Value2 = p[3];
-                // }
-                // else
-                // {
-                //     var t = p[7].Split("*")[1].Replace(".0", "");
-                //     s.Range["G" + row].Value2 = t;
-                // }
-                s.Range["G" + row].Value2 = wcog[p].GetThickness();
-
-                s.Range["H" + row].Value2 = wcog[p].Quality;
-
-                var nx = nclist.Select(nc => nc.NcName).ToList();
-                nx.Sort();
-                s.Range["I" + row].Value2 = string.Join("\n", nx.ToArray());
-
-                var type = wcog[p].Shape.TrimEnd() switch
-                {
-                    "FB" => $"Полоса {wcog[p].Dimension.Replace("*", "x").Replace(".0", "")}",
-                    "PP" => $"Полособульб {wcog[p].Dimension.Replace("*", "x").Replace(".0", "")}",
-                    _ => "Лист"
-                };
-                s.Range["J" + row].Value2 = type;
-
-
-                if (nclist.Count > 0)
-                {
-                    s.Range["K" + row].Value2 = nclist[0].Weight;
-                    s.Range["L" + row].Value2 = nclist[0].TotalWeight;
+                    posno = wcog[p].PosNo;
+                    block = wcog[p].Block;
+                    quantity = wcog[p].Quantity;
+                    thickness = wcog[p].GetThickness();
+                    quality = wcog[p].Quality;
+                    dimension = wcog[p].Shape.TrimEnd() switch
+                    {
+                        "FB" => $"Полоса {wcog[p].Dimension.Replace("*", "x").Replace(".0", "")}",
+                        "PP" => $"Полособульб {wcog[p].Dimension.Replace("*", "x").Replace(".0", "")}",
+                        _ => "Лист"
+                    };
+                    weight = wcog[p].Weight;
+                    totalWeight = weight * quantity;
                 }
                 else
                 {
-                    s.Range["K" + row].Value2 = wcog[p].Weight;
-                    s.Range["L" + row].Value2 = wcog[p].Weight * wcog[p].Quantity;
+                    posno = docx[p].PosNo;
+                    block = docx[p].Block;
+                    quantity = docx[p].Quantity;
+                    thickness = docx[p].GetThickness();
+                    quality = docx[p].Quality;
+                    dimension = docx[p].Dimension;
+                    weight = docx[p].Weight;
+                    totalWeight = weight * quantity;
                 }
 
-                if (type == "Лист" || type.StartsWith("Полоса"))
+                if (nxparts != null)
+                {
+                    nclist = nxparts.FindAll(x =>
+                            x.PosNo == posno.ToString() && x.Section == block);
+                }
+
+                if (nclist.Count > 0)
+                {
+                    weight = nclist[0].Weight;
+                    totalWeight = nclist[0].TotalWeight;
+                }
+                
+                if (dimension == "Лист" || dimension.StartsWith("Полоса"))
                 {
                     if (nclist.Count > 0)
                     {
-                        s.Range["M" + row].Value2 = nclist[0].Length;
-                        s.Range["N" + row].Value2 = nclist[0].Width;
+                        length = nclist[0].Length;
+                        width = nclist[0].Width;
                     }
                 }
                 else
                 {
-                    s.Range["M" + row].Value2 = wcog[p].TotalLength;
-
-                    var width = wcog[p].Shape.TrimEnd() switch
+                    if (wcog.ContainsKey(p))
                     {
-                        "FB" => wcog[p].Dimension.Split("*")[0],
-                        "PP" => wcog[p].Dimension.Split("*")[0],
-                        _ => ""
-                    };
+                        length = wcog[p].TotalLength;
 
-                    s.Range["N" + row].Value2 = width;
+                        width = double.Parse(wcog[p].Shape.TrimEnd() switch
+                        {
+                            "FB" => wcog[p].Dimension.Split("*")[0],
+                            "PP" => wcog[p].Dimension.Split("*")[0],
+                            _ => ""
+                        }, CultureInfo.InvariantCulture);
+                    }
                 }
 
-                s.Range["O" + row].Value2 = docx[wcog[p].PosNo].Assembly; // Docx.GetAssembly(docx, p.PosNo);
+                s.Range["A" + row].Value2 = row - 1;
+                s.Range["B" + row].Value2 = "";
+                s.Range["C" + row].Value2 = "056001";
+                s.Range["D" + row].Value2 = block;
+                s.Range["E" + row].Value2 = posno;
+                s.Range["F" + row].Value2 = nclist.Count > 0 ? nclist[0].Count : quantity;
+                s.Range["G" + row].Value2 = thickness;
+                s.Range["H" + row].Value2 = quality;
+
+                var nx = nclist.Select(nc => nc.NcName).ToList();
+                nx.Sort();
+                s.Range["I" + row].Value2 = string.Join("\n", nx.ToArray());
+                s.Range["J" + row].Value2 = dimension;
+                s.Range["K" + row].Value2 = weight;
+                s.Range["L" + row].Value2 = totalWeight;
+                s.Range["M" + row].Value2 = length;
+                s.Range["N" + row].Value2 = width;
+                s.Range["O" + row].Value2 = docx[posno].Assembly;
                 s.Range["P" + row].Value2 = "";
                 s.Range["Q" + row].Value2 = "";
 
@@ -281,7 +296,6 @@ namespace NestixReport
             fname = Path.Join(dir, fname);
 
             xl.SaveAs(fname);
-
         }
 
         private void CheckWcogClick(object sender, RoutedEventArgs e)
@@ -518,23 +532,6 @@ namespace NestixReport
             fname = Path.Join(dir, fname);
 
             xl.SaveAs(fname);
-        }
-
-
-
-
-
-
-    
-
-        private static string GetPos(string s)
-        {
-            return s.Split('-')[^1].Replace("P", "").Replace("S", "").Replace("B", "").Replace("C", "");
-        }
-
-        private static string GetSection(string s)
-        {
-            return s.Split('-')[0];
         }
 
         private void QuantityCheckWcogAndNestix(object sender, RoutedEventArgs e)

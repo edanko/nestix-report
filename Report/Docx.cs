@@ -3,6 +3,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using DataTable = System.Data.DataTable;
@@ -11,6 +12,7 @@ namespace NestixReport
 {
     public class Docx
     {
+        public string Block { get; set; }
         public int PosNo { get; set; }
         public int Quantity { get; set; }
         public string Dimension { get; set; }
@@ -18,21 +20,11 @@ namespace NestixReport
         public double Weight { get; set; }
         public string Assembly { get; set; }
 
-        /*public override string ToString()
-        {
-            return $"PosNo: {PosNo}, Dim: {Dimension}, Qual: {Quality}, Qty: {Quantity}, Assy: {Assembly}, W: {Weight}";
-        }*/
-
         public double GetThickness()
         {
             var spl = Dimension.Split('*');
             return double.Parse(spl.Length > 1 ? spl[1] : Dimension, CultureInfo.InvariantCulture);
         }
-
-        // public static string GetAssembly(List<Docx> d, int pos)
-        // {
-        //     return d.Find(x => x.PosNo == pos)?.Assembly;
-        // }
         
         public static Dictionary<int, Docx> Read(string filename)
         {
@@ -58,10 +50,20 @@ namespace NestixReport
             var res = new Dictionary<int, Docx>();
                 
             var assembly = "";
-                
+
+            var block = "";
+
             foreach (var table in doc.MainDocumentPart.Document.Body.Elements<Table>())
             {
                 var columnsCount = table.Elements<TableGrid>().First().ChildElements.Count;
+                
+                if (columnsCount == 1)
+                {
+                    var row = table.Elements<TableRow>().First();
+                    var s = row.Descendants<TableCell>().First();
+
+                    block = s.InnerText.ToLowerInvariant().Replace("секция", "").Trim();
+                }
 
                 if (columnsCount != 20)
                 {
@@ -97,10 +99,9 @@ namespace NestixReport
                         { } f when f.Contains("рж второго дна") => s[1].InnerText,
                         { } g when g.Contains("россыпь на секцию") => s[1].InnerText,
                         { } h when h.Contains("россыпь на стапель") => s[1].InnerText,
-                        { } d when d == "листы" => s[1].InnerText,
-                        { } l when l == "рж" => s[1].InnerText,
+                        "листы" => s[1].InnerText,
+                        "рж" => s[1].InnerText,
                         { } m when m.Contains("россыпь на подсекцию") => s[1].InnerText,
-
 
                         _ => assembly
                     };
@@ -165,6 +166,7 @@ namespace NestixReport
                     
                     
                     var pos = new Docx();
+                    pos.Block = block;
                     pos.PosNo = int.Parse(s[0].InnerText, CultureInfo.InvariantCulture);
                     
                     pos.Quantity = string.IsNullOrWhiteSpace(s[4].InnerText) ? 1 : int.Parse(s[4].InnerText, CultureInfo.InvariantCulture);

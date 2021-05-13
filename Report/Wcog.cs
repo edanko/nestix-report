@@ -37,11 +37,6 @@ namespace NestixReport
         public double TotalLength { get; set; }
         public double MouldedLength { get; set; }
 
-        /*public override string ToString()
-        {
-            return $"PosNo: {PosNo}, Block: {Block}, T: {GetThickness()}, Qual: {Quality}, Qty: {Quantity}";
-        }*/
-
         public double GetThickness()
         {
             if (Dimension.Length > 0)
