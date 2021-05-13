@@ -4,99 +4,15 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using DocumentFormat.OpenXml;
-using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
 using Microsoft.Office.Interop.Excel;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using Application = Microsoft.Office.Interop.Excel.Application;
-using Sheets = DocumentFormat.OpenXml.Spreadsheet.Sheets;
-using Workbook = DocumentFormat.OpenXml.Spreadsheet.Workbook;
 using Worksheet = Microsoft.Office.Interop.Excel.Worksheet;
 
 namespace NestixReport
 {
     partial class MainWindow
     {
-        private void PartlistFromSpec(object sender, RoutedEventArgs e)
-        {
-            if (DbComboBox.SelectedIndex != 0)
-            {
-                MessageBox.Show("Не выбран проект 10510!", "Фатал еррор");
-                return;
-            }
-
-            var ofd = new CommonOpenFileDialog
-            {
-                IsFolderPicker = true
-            };
-
-            if (ofd.ShowDialog() != CommonFileDialogResult.Ok)
-            {
-                return;
-            }
-
-            var docPath = "";
-
-            var files = Directory.GetFiles(ofd.FileName);
-
-            foreach (var file in files)
-            {
-                var lower = file.ToLowerInvariant();
-
-                if (Path.GetExtension(lower) == ".docx" && !lower.Contains("~"))
-                {
-                    docPath = lower;
-                }
-            }
-
-            var docx = Docx.Read(docPath);
-
-            var keys = docx.Keys.ToList();
-            keys.Sort();
-
-            var excel = new Application
-            {
-                Visible = true
-            };
-
-            var xl = excel.Workbooks.Add();
-            var s = (Worksheet) xl.Worksheets[1];
-
-            s.Range["A1"].Value2 = "№ поз.";
-            s.Range["B1"].Value2 = "Кол-во";
-            s.Range["C1"].Value2 = "Толщина";
-            s.Range["D1"].Value2 = "Марка материала";
-            s.Range["E1"].Value2 = "Масса";
-            s.Range["F1"].Value2 = "Узел";
-
-
-            s.Range["A1", "F1"].Font.Bold = true;
-            s.Range["A1", "F1"].EntireColumn.VerticalAlignment = XlVAlign.xlVAlignCenter;
-            s.Range["A1", "F1"].EntireColumn.HorizontalAlignment = XlHAlign.xlHAlignCenter;
-
-            var row = 2;
-            foreach (var k in keys)
-            {
-                s.Range["A" + row].Value2 = docx[k].PosNo;
-                s.Range["B" + row].Value2 = docx[k].Quantity;
-                s.Range["C" + row].Value2 = docx[k].GetThickness();
-                s.Range["D" + row].Value2 = docx[k].Quality;
-                s.Range["E" + row].Value2 = docx[k].Weight;
-                s.Range["F" + row].Value2 = docx[k].Assembly;
-
-                row++;
-            }
-
-            //s.Range["A1", "D" + row].Borders.Weight = 2;
-            s.Range["A1", "F1"].EntireColumn.AutoFit();
-            s.Range["A1", "F" + row].EntireRow.AutoFit();
-
-            s.Range["A1", "F1"].AutoFilter(1, null, XlAutoFilterOperator.xlFilterNoFill, null, true);
-
-
-        }
-
         private void PickingList10510Click(object sender, RoutedEventArgs e)
         {
             if (DbComboBox.SelectedIndex != 0)

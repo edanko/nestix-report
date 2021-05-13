@@ -45,8 +45,5 @@
         <Button Padding="5" Margin="10 10 10 0" Click="QuantityCheckWcogAndNestix">
             <TextBlock TextWrapping="Wrap" TextAlignment="Center">10510: Сравнить кол-во деталей (WCOG и Nestix)</TextBlock>
         </Button>
-        <Button Padding="5" Margin="10 10 10 0" Click="PartlistFromSpec">
-            <TextBlock TextWrapping="Wrap" TextAlignment="Center">10510: партлист из спец.</TextBlock>
-        </Button>
     </StackPanel>
 </Window>
