@@ -1,6 +1,0 @@
-﻿<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Unnamed" type="DotNetFolderPublish" factoryName="Publish to folder">
-    <riderPublish configuration="Debug" delete_existing_files="true" platform="x64" produce_single_file="true" runtime="win-x64" target_folder="$PROJECT_DIR$/publish" target_framework="net5.0-windows" uuid_high="-3752558713089601879" uuid_low="-5104042163615087866" />
-    <method v="2" />
-  </configuration>
-</component>
